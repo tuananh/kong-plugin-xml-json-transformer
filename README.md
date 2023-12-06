@@ -10,16 +10,16 @@ Start Kong instance along with the plugin.
 $ docker compose up
 ```
 
-What this script does is:
+This will launch:
 
-- Start a nginx instance with `nginx-www` mounted to `/usr/share/nginx/html`. We will use this as test upstream for Kong. 
-- Start a Kong instance in dbless mode. The configuration is loaded from `kong/kong.yml`.
+- A nginx instance with `./nginx-www` mounted to `/usr/share/nginx/html`. We will use this as test upstream for Kong.
+- A Kong instance in dbless mode. The configuration is loaded from `kong/kong.yml`.
 - The declarative configuration setup a single service for testing.
 
 Test the route to see if the plugin is working properly. We are expecting response in JSON format.
 
 ```sh
-curl http://localhost:8000/test.xml | jq
+$ curl --silent http://localhost:8000/test.xml | jq
 ```
 
 Expected output
