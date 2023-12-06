@@ -37,4 +37,4 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./test-upstream/test.xml:/usr/share/nginx/html/test.xml
+      - ./nginx-www:/usr/share/nginx/html
