@@ -1,1 +1,9 @@
-<foo>bar</foo>
+<?xml version="1.0" encoding="UTF-8"?>
+<notes foo="bar">
+  <note id="1">
+    <text>foo</text>
+  </note>
+  <note id="2">
+    <text>bar</text>
+  </note>
+</notes>
