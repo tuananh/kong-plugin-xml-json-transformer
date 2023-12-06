@@ -23,16 +23,14 @@ function xml_json_transformer:body_filter(config)
         local resp_body = table.concat(ngx.ctx.buffered)
         ngx.ctx.buffered = nil
 
-        local result, errors = pcall(function(resp_body)
-            return lxp.parse(resp_body)
-        end, resp_body)
+        local ok, data = pcall(lxp.parse, resp_body)
 
-        if not result then
+        if not ok then
             ngx.log(ngx.ERR, "parse error: malformed xml")
             ngx.arg[1] = resp_body
             ngx.arg[2] = true
         else
-            local json_text = cjson.encode(result)
+            local json_text = cjson.encode(data)
             ngx.arg[1] = json_text
             ngx.arg[2] = true
         end
