@@ -32,9 +32,7 @@ function xml_json_transformer:body_filter(config)
         local resp_body = table.concat(ngx.ctx.buffered)
         ngx.ctx.buffered = nil
 
-        local ok, data = pcall(function(resp_body)
-            return parse(resp_body)
-        end, resp_body)
+        local ok, data = pcall(parse, resp_body)
 
         if not ok then
             ngx.log(ngx.ERR, "parse error: malformed xml")
