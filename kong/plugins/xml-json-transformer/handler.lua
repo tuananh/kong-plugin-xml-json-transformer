@@ -1,9 +1,6 @@
 local plugin_name = "xml-json-transformer"
 local cjson = require "cjson"
-local table_concat = table.concat
-local xml2lua = require("xml2lua")
-local handler = require("xmlhandler.tree")
-local parser = xml2lua.parser(handler)
+local lxp = require("lxp.totable")
 
 local xml_json_transformer = {VERSION = "0.1.0", PRIORITY = 990}
 
@@ -27,16 +24,15 @@ function xml_json_transformer:body_filter(config)
         ngx.ctx.buffered = nil
 
         local result, errors = pcall(function(resp_body)
-            parser:parse(resp_body)
+            return lxp.parse(resp_body)
         end, resp_body)
-        
+
         if not result then
             ngx.log(ngx.ERR, "parse error: malformed xml")
             ngx.arg[1] = resp_body
             ngx.arg[2] = true
         else
-            local xml = handler.root
-            local json_text = cjson.encode(xml)
+            local json_text = cjson.encode(result)
             ngx.arg[1] = json_text
             ngx.arg[2] = true
         end
