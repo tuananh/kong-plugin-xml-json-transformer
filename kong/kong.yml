@@ -2,7 +2,7 @@ _format_version: "3.0"
 
 services:
   - name: nginx-test
-    url: http://nginx-test:8080
+    url: http://nginx:8080
     # plugins:
     #   - name: xml-json-transformer
     routes:

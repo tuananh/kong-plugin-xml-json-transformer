@@ -4,16 +4,10 @@ An experimental XML to JSON transformer plugin for Kong.
 
 ## Develop
 
-Build a test Docker container with
-
-```sh
-$ docker build -t kong:local .
-```
-
 Start Kong instance along with the plugin.
 
 ```sh
-$ ./hack/start-kong.sh
+$ docker compose up
 ```
 
 What this script does is:
