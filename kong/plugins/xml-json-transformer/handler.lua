@@ -1,55 +1,16 @@
 local plugin_name = "xml-json-transformer"
 local cjson = require "cjson"
-local lxptable = require "lxp.totable"
-local table = require "table"
-local tinsert, tremove = table.insert, table.remove
-local assert, tostring, type = assert, tostring, type
+local table_concat = table.concat
+local xml2lua = require("xml2lua")
+local handler = require("xmlhandler.tree")
 
 local xml_json_transformer = {VERSION = "0.1.0", PRIORITY = 990}
 
-local function starttag(p, tag, attr)
-    local stack = p:getcallbacks().stack
-    local newelement = {tag = tag, attr = attr}
-    tinsert(stack, newelement)
-end
-
-local function endtag(p, tag)
-    local stack = p:getcallbacks().stack
-    local element = tremove(stack)
-
-    local level = #stack
-    tinsert(stack[level], element)
-end
-
-local function text(p, txt)
-    local stack = p:getcallbacks().stack
-    local element = stack[#stack]
-    local n = #element
-    if type(element[n]) == "string" and n > 0 then
-        element[n] = element[n] .. txt
-    else
-        tinsert(element, txt)
-    end
-end
-
-local function parse(o, opts)
-    local opts = opts or {}
-    local c = {
-        StartElement = starttag,
-        EndElement = endtag,
-        CharacterData = text,
-        _nonstrict = true,
-        stack = {{}}
-    }
-
-    local p = require("lxp").new(c, opts.separator)
-    local status, err, line, col, pos = p:parse(o)
-    if not status then return nil, err, line, col, pos end
-
-    local status, err, line, col, pos = p:parse() -- close document
-    if not status then return nil, err, line, col, pos end
-    p:close()
-    return c.stack[1][1]
+local function parse(xml)
+    local tree = handler:new()
+    local xmlparser = xml2lua.parser(tree)
+    xmlparser:parse(xml)
+    return tree
 end
 
 function xml_json_transformer:header_filter(conf)
@@ -71,15 +32,17 @@ function xml_json_transformer:body_filter(config)
         local resp_body = table.concat(ngx.ctx.buffered)
         ngx.ctx.buffered = nil
 
-        local ok, data = pcall(parse, resp_body)
+        local ok, data = pcall(function(resp_body)
+            return parse(resp_body)
+        end, resp_body)
 
         if not ok then
             ngx.log(ngx.ERR, "parse error: malformed xml")
             ngx.arg[1] = resp_body
             ngx.arg[2] = true
         else
-            data = lxptable.clean(data)
-            local json_text = cjson.encode(data)
+            local xml = data.root
+            local json_text = cjson.encode(xml)
             ngx.arg[1] = json_text
             ngx.arg[2] = true
         end

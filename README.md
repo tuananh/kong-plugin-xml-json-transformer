@@ -19,83 +19,47 @@ This will launch:
 Test the route to see if the plugin is working properly. We are expecting response in JSON format.
 
 ```sh
-$ curl --silent http://localhost:8000/test.xml | jq
+$ curl --silent http://localhost:8000/medium.xml | jq
 ```
 
 Expected output
 
 ```json
 {
-  "slideshow": [
-    {
-      "_attr": {
-        "title": "Sample Slide Show",
-        "author": "Yours Truly",
-        "date": "Date of publication"
-      },
-      "slide": [
-        {
-          "_attr": {
-            "type": "all"
-          },
-          "title": "Wake up to WonderWidgets!"
-        },
-        {
-          "_attr": {
-            "type": "all"
-          },
-          "item": [
-            {
-              "1": "Why",
-              "2": "are great",
-              "em": "WonderWidgets"
-            },
-            {},
-            {
-              "1": "Who",
-              "2": "WonderWidgets",
-              "em": "buys"
-            }
-          ],
-          "title": "Overview"
-        }
-      ]
+  "slideshow": {
+    "_attr": {
+      "date": "Date of publication",
+      "author": "Yours Truly",
+      "title": "Sample Slide Show"
     },
-    {
-      "_attr": {
-        "title": "Sample Slide Show",
-        "author": "Yours Truly",
-        "date": "Date of publication"
-      },
-      "slide": [
-        {
-          "_attr": {
-            "type": "all"
-          },
-          "title": "Wake up to WonderWidgets!"
+    "slide": [
+      {
+        "_attr": {
+          "type": "all"
         },
-        {
-          "_attr": {
-            "type": "all"
+        "title": "Wake up to WonderWidgets!"
+      },
+      {
+        "_attr": {
+          "type": "all"
+        },
+        "item": [
+          {
+            "1": "Why",
+            "2": "are great",
+            "em": "WonderWidgets"
           },
-          "item": [
-            {
-              "1": "Why",
-              "2": "are great",
-              "em": "WonderWidgets"
-            },
-            {},
-            {
-              "1": "Who",
-              "2": "WonderWidgets",
-              "em": "buys"
-            }
-          ],
-          "title": "Overview"
-        }
-      ]
-    }
-  ]
+          {},
+          {
+            "1": "Who",
+            "2": "WonderWidgets",
+            "em": "buys"
+          }
+        ],
+        "title": "Overview"
+      }
+    ]
+  }
 }
 ```
 
