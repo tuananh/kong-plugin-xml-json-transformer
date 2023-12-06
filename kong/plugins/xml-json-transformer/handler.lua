@@ -7,49 +7,49 @@ local assert, tostring, type = assert, tostring, type
 
 local xml_json_transformer = {VERSION = "0.1.0", PRIORITY = 990}
 
-local function starttag (p, tag, attr)
-	local stack = p:getcallbacks().stack
-	local newelement = {tag = tag, attr = attr}
-	tinsert(stack, newelement)
+local function starttag(p, tag, attr)
+    local stack = p:getcallbacks().stack
+    local newelement = {tag = tag, attr = attr}
+    tinsert(stack, newelement)
 end
 
-local function endtag (p, tag)
-	local stack = p:getcallbacks().stack
-	local element = tremove(stack)
-    
-	local level = #stack
+local function endtag(p, tag)
+    local stack = p:getcallbacks().stack
+    local element = tremove(stack)
+
+    local level = #stack
     tinsert(stack[level], element)
 end
 
-local function text (p, txt)
-	local stack = p:getcallbacks().stack
-	local element = stack[#stack]
-	local n = #element
-	if type(element[n]) == "string" and n > 0 then
-		element[n] = element[n] .. txt
-	else
-		tinsert(element, txt)
-	end
+local function text(p, txt)
+    local stack = p:getcallbacks().stack
+    local element = stack[#stack]
+    local n = #element
+    if type(element[n]) == "string" and n > 0 then
+        element[n] = element[n] .. txt
+    else
+        tinsert(element, txt)
+    end
 end
 
-local function parse (o, opts)
-	local opts = opts or {}
-	local c = {
-		StartElement = starttag,
-		EndElement = endtag,
-		CharacterData = text,
-		_nonstrict = true,
-		stack = {{}},
-	}
+local function parse(o, opts)
+    local opts = opts or {}
+    local c = {
+        StartElement = starttag,
+        EndElement = endtag,
+        CharacterData = text,
+        _nonstrict = true,
+        stack = {{}}
+    }
 
-	local p = require("lxp").new(c, opts.separator)
-	local status, err, line, col, pos = p:parse(o)
+    local p = require("lxp").new(c, opts.separator)
+    local status, err, line, col, pos = p:parse(o)
     if not status then return nil, err, line, col, pos end
 
-	local status, err, line, col, pos = p:parse() -- close document
-	if not status then return nil, err, line, col, pos end
-	p:close()
-	return c.stack[1][1]
+    local status, err, line, col, pos = p:parse() -- close document
+    if not status then return nil, err, line, col, pos end
+    p:close()
+    return c.stack[1][1]
 end
 
 function xml_json_transformer:header_filter(conf)
