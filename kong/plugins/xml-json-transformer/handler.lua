@@ -12,7 +12,6 @@ function xml_json_transformer:header_filter(conf)
     ngx.header["content-length"] = nil
 end
 
----[[ runs in the 'access_by_lua_block'
 function xml_json_transformer:body_filter(config)
     local chunk, eof = ngx.arg[1], ngx.arg[2]
 
@@ -30,7 +29,7 @@ function xml_json_transformer:body_filter(config)
         local result, errors = pcall(function(resp_body)
             parser:parse(resp_body)
         end, resp_body)
-
+        
         if not result then
             ngx.log(ngx.ERR, "parse error: malformed xml")
             ngx.arg[1] = resp_body
