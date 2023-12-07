@@ -1,15 +1,25 @@
 _format_version: "3.0"
 
 services:
-  - name: nginx-test
-    url: http://nginx:8080
-    # plugins:
-    #   - name: xml-json-transformer
+  - name: xml-test
+    url: http://nginx:8080/xml
     routes:
       - name: my-route
         paths:
-          - /
+          - /xml
+        plugins: 
+        - name: xml-json-transformer
+  - name: json-test
+    url: http://nginx:8080/json
+    routes:
+      - name: my-route
+        paths:
+          - /json
+        plugins: 
+        - name: json-xml-transformer
 
-plugins:
-- name: xml-json-transformer
-  service: nginx-test
+# plugins:
+# - name: xml-json-transformer
+#   service: nginx-test
+# - name: json-xml-transformer
+#   service: nginx-test
