@@ -4,7 +4,7 @@ services:
   - name: xml-test
     url: http://nginx:8080/xml
     routes:
-      - name: my-route
+      - name: xml-route
         paths:
           - /xml
         plugins: 
@@ -12,14 +12,8 @@ services:
   - name: json-test
     url: http://nginx:8080/json
     routes:
-      - name: my-route
+      - name: json-route
         paths:
           - /json
         plugins: 
         - name: json-xml-transformer
-
-# plugins:
-# - name: xml-json-transformer
-#   service: nginx-test
-# - name: json-xml-transformer
-#   service: nginx-test
