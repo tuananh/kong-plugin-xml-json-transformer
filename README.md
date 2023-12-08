@@ -68,7 +68,7 @@ Expected output
 }
 ```
 
-Or XML to JSON transformer:
+Or JSON to XML transformer:
 
 ```sh
 $ curl --silent http://localhost:8000/json/medium.json
